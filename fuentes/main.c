@@ -1,7 +1,8 @@
 #include <ncurses.h>			/* ncurses.h includes stdio.h */  
 #include <stdio.h>
 #include <wiringPi.h>
-#include <string.h> 
+#include <string.h>
+#include <math.h>
 #include "../headers/deteccionTecla.h"
 #include "../headers/rs232.h"
 #include "../headers/auto.h"
@@ -16,6 +17,9 @@
 #include "../headers/loteria.h"
 #define PUERTO "/dev/serial0"
 #define VELOCIDAD 9600
+#define MAXMS 100.0
+
+float modifier  = 0.39212;
  
 int main()
 {
@@ -27,9 +31,9 @@ int main()
 
 	int leds[] ={4, 5, 6, 26, 27, 28, 29, 25};
 	
-	int potenciometro, fotocelula, termistor;
+	int potenciometro, fotocelula, termistor, ADC;
 
-	adcCrudo(1, &potenciometro, &fotocelula, &termistor);
+	adcCrudo(1, &ADC, &fotocelula, &termistor);
 
 	pinMode(leds[0], OUTPUT);	
 	pinMode(leds[1], OUTPUT);
@@ -46,12 +50,14 @@ int main()
 	int filas, columnas;
 	int intentos = 3;
 	int posC = 0;
-	int velocidad, poteCorrecto;
+	int speed, velocidad_ms, poteCorrecto;
 
-       	potenciometro>5 ? (poteCorrecto = potenciometro - potenciometro%5) : (poteCorrecto = 5);
-	velocidad = poteCorrecto;
+
+
+	potenciometro = modifier * (ADC+2);
 
 	initscr();				// Comienzo la interfaz de ncurses
+	curs_set(0);
 
 						// y columnas de la ventana actual
 	if(has_colors()){			// Si la terminal soporta colores
@@ -59,69 +65,57 @@ int main()
 	}
 
 	
-	getmaxyx(stdscr, filas, columnas); 	// Guardo en mis variables las filas 
-
 	if(!logueo(intentos))
 		return 0;	
 
 	fdpuerto = rs232init(PUERTO,VELOCIDAD);
 
-	while(!deteccionTecla('q', 0)){
-		wclear(stdscr);	// Limpio la pantalla al comienzo de cada ciclo
- 		getmaxyx(stdscr, filas, columnas); // Guardo en mis variables las filas 
-						   // y columnas de la ventana actual
- 		mvprintw(0	, 0	, "Presione la tecla \"q\" para finalizar", filas, columnas);
- 		mvprintw(filas-1, 0	, "[DEBUG] La terminal tiene %d filas y %d columnas", filas, columnas);
-		adcCrudo(0, &potenciometro, &fotocelula, &termistor);
-       		potenciometro>5 ? (poteCorrecto = potenciometro - potenciometro%5) : (poteCorrecto = 5);
- 		mvprintw(filas-2, 0	, "El valor del potenciometro es %d. Para usar este valor como velocidad presione \"p\"", potenciometro);
-		(columnas/2-20)<0 ? (posC=0) : (posC = columnas/2-20);
-		mvaddstr(filas/2-4, posC, "Ingrese la secuencia que desea comenzar:");
-		mvaddstr(filas/2-3, posC, "1) El auto fantástico");
-		mvaddstr(filas/2-2, posC, "2) El choque");
-		mvaddstr(filas/2-1, posC, "3) La apilada");
-		mvaddstr(filas/2+0, posC, "4) La carrera");
-		mvaddstr(filas/2+1, posC, "5) El contador");
-		mvaddstr(filas/2+2, posC, "6) El auto policia");
-		mvaddstr(filas/2+3, posC, "7) La explosion");
-		mvaddstr(filas/2+4, posC, "8) La lotería");
+	while(!deteccionTecla('Q', 0))
+	{
+		adcCrudo(0, &ADC, &fotocelula, &termistor);
+
+		potenciometro = modifier * (ADC+2);
 		
+		clear();
+		mainmenu(potenciometro, speed, remoto);
+
 		int puertochar;
 		puertochar = rs232rx(fdpuerto);
 
+		if(!remoto)
+		{
+			if (deteccionTecla('R',1))
+				remoto = 1;
+		}
+		
+		else
+		{
+			rs232escribo(fdpuerto);
+			if (deteccionTecla('R',1))
+				remoto = 0;
+		}
 
- 			mvprintw(2	, 0	, "Para pasar a modo standalone ponga el switch \"1\" en high y presione \"x\"");
-			if(!remoto){
- 				mvprintw(1	, 0	, "Se encuentra en modo LOCAL, para pasar a remoto presione \"r\"");
-				if (deteccionTecla('r',1))
-					remoto = 1;
-			}else{
- 				mvprintw(1	, 0	, "Se encuentra en modo REMOTO, para pasar a local presione \"r\"");
- 				wrefresh(stdscr); // Actualizo la pantalla en cada ciclo
-				rs232escribo(fdpuerto);
-				if (deteccionTecla('r',1))
-					remoto = 0;
-			}
+		if (deteccionTecla('P',1) || puertochar=='P') 
+		{
+			velocidad_ms = 101 - potenciometro;
+		}
+		if (deteccionTecla('1',1) || puertochar=='1') 
+			while(!deteccionTecla('Q', 1)) velocidad_ms = autoFantastico(leds,   velocidad_ms, fdpuerto, remoto);
+		if (deteccionTecla('2',1) || puertochar=='2') 
+			while(!deteccionTecla('Q', 1)) velocidad_ms = choque(leds, velocidad_ms, fdpuerto, remoto);
+		if (deteccionTecla('3',1) || puertochar=='3')
+			while(!deteccionTecla('Q', 1)) velocidad_ms = apilada(leds, velocidad_ms, fdpuerto, remoto);
+		if (deteccionTecla('4',1) || puertochar=='4')
+			while(!deteccionTecla('Q', 1)) velocidad_ms = carrera(leds, velocidad_ms, fdpuerto, remoto);
+		if (deteccionTecla('5',1) || puertochar=='5')
+			while(!deteccionTecla('Q', 1)) velocidad_ms = contador(leds, velocidad_ms, fdpuerto, remoto);
+		if (deteccionTecla('6',1) || puertochar=='6')
+			while(!deteccionTecla('Q', 1)) velocidad_ms = policia(leds, velocidad_ms, fdpuerto, remoto);
+		if (deteccionTecla('7',1) || puertochar=='7')
+			while(!deteccionTecla('Q', 1)) velocidad_ms = explosion(leds, velocidad_ms, fdpuerto, remoto);
+		if (deteccionTecla('8',1) || puertochar=='8')
+			while(!deteccionTecla('Q', 1)) velocidad_ms = loteria(leds, velocidad_ms, fdpuerto, remoto);
 
-			if (deteccionTecla('p',1) || puertochar=='p') 
-				velocidad = poteCorrecto;
-			if (deteccionTecla('1',1) || puertochar=='1') 
-				while(!deteccionTecla('q', 1)) velocidad = autoFantastico(leds,   velocidad, fdpuerto, remoto);
-			if (deteccionTecla('2',1) || puertochar=='2') 
-				while(!deteccionTecla('q', 1)) velocidad = choque(leds, velocidad, fdpuerto, remoto);
-			if (deteccionTecla('3',1) || puertochar=='3')
-				while(!deteccionTecla('q', 1)) velocidad = apilada(leds, velocidad, fdpuerto, remoto);
-			if (deteccionTecla('4',1) || puertochar=='4')
-				while(!deteccionTecla('q', 1)) velocidad = carrera(leds, velocidad, fdpuerto, remoto);
-			if (deteccionTecla('5',1) || puertochar=='5')
-				while(!deteccionTecla('q', 1)) velocidad = contador(leds, velocidad, fdpuerto, remoto);
-			if (deteccionTecla('6',1) || puertochar=='6')
-				while(!deteccionTecla('q', 1)) velocidad = policia(leds, velocidad, fdpuerto, remoto);
-			if (deteccionTecla('7',1) || puertochar=='7')
-				while(!deteccionTecla('q', 1)) velocidad = explosion(leds, velocidad, fdpuerto, remoto);
-			if (deteccionTecla('8',1) || puertochar=='8')
-				while(!deteccionTecla('q', 1)) velocidad = loteria(leds, velocidad, fdpuerto, remoto);
- 			wrefresh(stdscr); // Actualizo la pantalla en cada ciclo
 	}
 	
 	rs232close(fdpuerto);

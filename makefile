@@ -1,6 +1,6 @@
 IDIR =./headers
 CC=gcc
-CFLAGS=-I$(IDIR) -Wall
+CFLAGS=-I$(IDIR) -Wall 
 
 ODIR=build
 
@@ -9,7 +9,7 @@ LIBS=-lwiringPi -lncurses
 _DEPS = adcCrudo.h apilada.h auto.h carrera.h choque.h contador.h controlVelocidad.h deteccionTecla.h explosion.h logueo.h loteria.h policia.h rs232.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = adcCrudo.o apilada.o auto.o carrera.o choque.o contador.o controlVelocidad.o deteccionTecla.o explosion.o logueo.o loteria.o main.o policia.o rs232.o
+_OBJ = adcCrudo.o apilada.o auto.o carrera.o choque.o contador.o controlVelocidad.o deteccionTecla.o explosion.o logueo.o loteria.o main.o policia.o rs232.o mainmenu.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
@@ -22,4 +22,3 @@ ejecutable: $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ ejecutable

@@ -53,8 +53,8 @@ int autoFantastico(int leds[8], int periodo, int fdpuerto, bool remoto){
 				if(remoto) rs232escribo(fdpuerto);
 				periodo = controlVelocidad(periodo, puertochar);
 				puertochar = rs232rx(fdpuerto);
-				if(deteccionTecla('q', 0) || puertochar=='q'){
-					ungetch('q');
+				if(deteccionTecla('Q', 0) || puertochar=='Q'){
+					ungetch('Q');
 				       	j=2; i=8; break;
 				}
  				getmaxyx(stdscr, filas, columnas); // Guardo en mis variables las filas 

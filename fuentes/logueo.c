@@ -29,15 +29,11 @@ void show_menu (int intentos, int denied);
 bool logueo(int intentos)
 {
 
-	initscr();
-	noecho();                    /* turn off echoing*/
 
-	start_color();
 	init_pair(1, COLOR_RED, 	COLOR_BLACK);
 	init_pair(2, COLOR_GREEN, 	COLOR_BLACK);
 	init_pair(3, COLOR_YELLOW,	COLOR_BLACK);
 	
-	curs_set(0);
 
 	while(denied==1 && counter < intentos)
 	{

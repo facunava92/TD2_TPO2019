@@ -42,10 +42,10 @@ int contador(int leds[8], int periodo, int fdpuerto, bool remoto){
 			       	i=512; break;
 			}
 
-			ledmenu(remoto, programa, speed);
 
 			delay(1);	// Delay entre ciclos
 		}
+			ledmenu(remoto, programa, speed);
 	}
 	
 	// Cuando termina el programa apagado todos los pines

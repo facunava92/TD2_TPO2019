@@ -117,5 +117,5 @@ char str6[]	= "MODO REMOTO";
 	wattroff(stdscr, A_BOLD |  COLOR_PAIR(6));
 	wrefresh(frame_menu);
 
-	napms(80);
+	napms(60);
 }

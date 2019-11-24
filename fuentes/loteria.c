@@ -60,9 +60,9 @@ int loteria(int leds[8],  int periodo, int fdpuerto, bool remoto ){
 			}
 			
 			
-			ledmenu(remoto, programa, speed);
 			delay(1);	// Delay entre ciclos
 		}
+			ledmenu(remoto, programa, speed);
 	}
 	
 	// Cuando termina el programa apagado todos los pines

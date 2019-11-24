@@ -45,10 +45,10 @@ int choque(int pines[8], int periodo, int fdpuerto, bool remoto){
 			}
 			
 			
-			ledmenu(remoto, programa, speed);
 
 			delay(1);
 		}
+		ledmenu(remoto, programa, speed);
 	}	
 
 	// Pongo todos los leds a 0

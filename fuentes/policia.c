@@ -38,10 +38,10 @@ int speed;
 			       	i=2; break;
 			}
 
-			ledmenu(remoto, programa, speed);
 
 			delay(1);
 		}
+			ledmenu(remoto, programa, speed);
 	}	
 
 	// Pongo todos los leds a 0

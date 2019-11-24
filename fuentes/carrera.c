@@ -44,10 +44,10 @@ int carrera(int pines[8], int periodo, int fdpuerto, bool remoto){
 			       	i=18; break;
 			}
 
-			ledmenu(remoto, programa, speed);
 			
 			delay(1);
 		}
+			ledmenu(remoto, programa, speed);
 	}	
 
 	// Pongo todos los leds a 0

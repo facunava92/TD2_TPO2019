@@ -49,7 +49,8 @@ int autoFantastico(int leds[8], int periodo, int fdpuerto, bool remoto){
 				digitalWrite(leds[7], valores[7]);
 			}
 
-			for(int d=0; d<periodo; d++){
+			for(int d=0; d<periodo; d++)
+			{
 				int puertochar;
 				if(remoto) rs232escribo(fdpuerto);
 				periodo = controlVelocidad(periodo, puertochar);
@@ -60,10 +61,10 @@ int autoFantastico(int leds[8], int periodo, int fdpuerto, bool remoto){
 				       	j=2; i=8; break;
 				}
 				
-				ledmenu(remoto, programa, speed);
 
 				delay(1);	// Delay entre ciclos
 			}
+				ledmenu(remoto, programa, speed);
 		}
 	}
 	// Cuando termina el programa apagado todos los pines

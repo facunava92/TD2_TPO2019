@@ -41,7 +41,7 @@ int main()
 
 
 	potenciometro = modifier * (ADC+2);
-	velocidad_ms 	= 201 - 2 * potenciometro;
+	velocidad_ms 	= 101 - 1 * potenciometro;
 
 	initscr();				// Comienzo la interfaz de ncurses
 	curs_set(0);
@@ -61,7 +61,7 @@ int main()
 	{
 		adcCrudo(0, &ADC, &fotocelula, &termistor);
 
-		potenciometro = modifier * (ADC+2.5);
+		potenciometro = modifier * (ADC+2);
 		//velocidad_ms 	= 101 - 2 * potenciometro;
 		speed		= 101 - (0.99 *  velocidad_ms);
 

@@ -6,7 +6,8 @@
 
 int autoFantastico(int leds[8], int periodo, int fdpuerto, bool remoto){
 	bool valores[8] = {0,0,0,0,0,0,0,0}; // Cadena que guarda estados de los leds
-	int posC, filas, columnas;
+	int posC, filas, columnas,speed;
+	char programa[] = "El auto fantastico";
 
 	for(int j=0; j<2; j++){	// Realizo dos ciclos, uno de izq. a derecha, otro de derecha a izq.
 		for(int i=0; i<8; i++){ // Prendo todos los leds uno a la vez, en orden
@@ -52,20 +53,14 @@ int autoFantastico(int leds[8], int periodo, int fdpuerto, bool remoto){
 				int puertochar;
 				if(remoto) rs232escribo(fdpuerto);
 				periodo = controlVelocidad(periodo, puertochar);
+				speed = 101 - (0.4975 * periodo);
 				puertochar = rs232rx(fdpuerto);
 				if(deteccionTecla('Q', 0) || puertochar=='Q'){
 					ungetch('Q');
 				       	j=2; i=8; break;
 				}
- 				getmaxyx(stdscr, filas, columnas); // Guardo en mis variables las filas 
-				wclear(stdscr);
- 				mvprintw(0	, 0	, "Presione la tecla \"q\" para finalizar", filas, columnas);
- 				mvprintw(filas-1, 0	, "[DEBUG] La terminal tiene %d filas y %d columnas", filas, columnas);
-				(columnas/2-22)<0 ? (posC=0) : (posC = columnas/2-22);
-				mvaddstr(filas/2-1, posC, "Ejecutando la secuencia \"El auto fantástico\"");
-				(columnas/2-14)<0 ? (posC=0) : (posC = columnas/2-14);
-				mvprintw(filas/2, posC, "El periodo actual es %4d ms", periodo);
-				wrefresh(stdscr);
+				
+				ledmenu(remoto, programa, speed);
 
 				delay(1);	// Delay entre ciclos
 			}

@@ -17,44 +17,31 @@
 #include "../headers/loteria.h"
 #define PUERTO "/dev/serial0"
 #define VELOCIDAD 9600
-#define MAXMS 100.0
 
 float modifier  = 0.39212;
- 
+int leds[] ={4, 5, 6, 26, 27, 28, 29, 25};
+int potenciometro, fotocelula, termistor, ADC;
+int fdpuerto = 0;
+int filas, columnas;
+int intentos = 3;
+int posC = 0;
+int speed, velocidad_ms;
+
+bool remoto = 0;
+
 int main()
 {
-	wiringPiSetup();	// Inicializo las funciones de wiringPi, necesario segun documentacion
-	initscr();	// Inicializo mi pantalla de ncurses, por defecto llamada stdscr
-	noecho(); 		// Deshabilito el echo automatico de los caracteres tipeados
-  	keypad(stdscr, TRUE); 	// Deshabilito que se pueda usar el keypad del teclado en la pantalla de ncurses
-				//	esto es necesario para el correcto uso de la tecla Escape
-
-	int leds[] ={4, 5, 6, 26, 27, 28, 29, 25};
-	
-	int potenciometro, fotocelula, termistor, ADC;
+	led_config(leds);
+	initscr();			// Inicializo mi pantalla de ncurses, por defecto llamada stdscr
+	noecho(); 			// Deshabilito el echo automatico de los caracteres tipeados
+  	keypad(stdscr, TRUE); 		// Deshabilito que se pueda usar el keypad del teclado en la pantalla de ncurses
+					//esto es necesario para el correcto uso de la tecla Escape
 
 	adcCrudo(1, &ADC, &fotocelula, &termistor);
 
-	pinMode(leds[0], OUTPUT);	
-	pinMode(leds[1], OUTPUT);
-	pinMode(leds[2], OUTPUT);
-	pinMode(leds[3], OUTPUT);
-	pinMode(leds[4], OUTPUT);
-	pinMode(leds[5], OUTPUT);
-	pinMode(leds[6], OUTPUT);
-	pinMode(leds[7], OUTPUT);
-
-
-	bool remoto = 0;
-	int fdpuerto = 0;
-	int filas, columnas;
-	int intentos = 3;
-	int posC = 0;
-	int speed, velocidad_ms, poteCorrecto;
-
-
 
 	potenciometro = modifier * (ADC+2);
+	velocidad_ms 	= 201 - 2 * potenciometro;
 
 	initscr();				// Comienzo la interfaz de ncurses
 	curs_set(0);
@@ -74,8 +61,10 @@ int main()
 	{
 		adcCrudo(0, &ADC, &fotocelula, &termistor);
 
-		potenciometro = modifier * (ADC+2);
-		
+		potenciometro = modifier * (ADC+2.5);
+		//velocidad_ms 	= 201 - 2 * potenciometro;
+		speed		= 101 - (0.4975 *  velocidad_ms);
+
 		clear();
 		mainmenu(potenciometro, speed, remoto);
 
@@ -97,7 +86,7 @@ int main()
 
 		if (deteccionTecla('P',1) || puertochar=='P') 
 		{
-			velocidad_ms = 101 - potenciometro;
+			velocidad_ms 	= 201 - 2 * potenciometro;
 		}
 		if (deteccionTecla('1',1) || puertochar=='1') 
 			while(!deteccionTecla('Q', 1)) velocidad_ms = autoFantastico(leds,   velocidad_ms, fdpuerto, remoto);

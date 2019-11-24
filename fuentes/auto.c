@@ -53,7 +53,7 @@ int autoFantastico(int leds[8], int periodo, int fdpuerto, bool remoto){
 				int puertochar;
 				if(remoto) rs232escribo(fdpuerto);
 				periodo = controlVelocidad(periodo, puertochar);
-				speed = 101 - (0.4975 * periodo);
+				speed = 101 - (0.9900 * periodo);
 				puertochar = rs232rx(fdpuerto);
 				if(deteccionTecla('Q', 0) || puertochar=='Q'){
 					ungetch('Q');

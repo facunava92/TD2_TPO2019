@@ -15,6 +15,8 @@
 #include "../headers/explosion.h"
 #include "../headers/contador.h"
 #include "../headers/loteria.h"
+#include "../headers/mainmenu.h"
+#include "../headers/ledconfig.h"
 #define PUERTO "/dev/serial0"
 #define VELOCIDAD 9600
 
@@ -22,9 +24,7 @@ float modifier  = 0.39212;
 int leds[] ={4, 5, 6, 26, 27, 28, 29, 25};
 int potenciometro, fotocelula, termistor, ADC;
 int fdpuerto = 0;
-int filas, columnas;
 int intentos = 3;
-int posC = 0;
 int speed, velocidad_ms;
 
 bool remoto = 0;
@@ -62,8 +62,8 @@ int main()
 		adcCrudo(0, &ADC, &fotocelula, &termistor);
 
 		potenciometro = modifier * (ADC+2.5);
-		//velocidad_ms 	= 201 - 2 * potenciometro;
-		speed		= 101 - (0.4975 *  velocidad_ms);
+		//velocidad_ms 	= 101 - 2 * potenciometro;
+		speed		= 101 - (0.99 *  velocidad_ms);
 
 		clear();
 		mainmenu(potenciometro, speed, remoto);
@@ -86,7 +86,7 @@ int main()
 
 		if (deteccionTecla('P',1) || puertochar=='P') 
 		{
-			velocidad_ms 	= 201 - 2 * potenciometro;
+			velocidad_ms 	= 101 - 1 * potenciometro;
 		}
 		if (deteccionTecla('1',1) || puertochar=='1') 
 			while(!deteccionTecla('Q', 1)) velocidad_ms = autoFantastico(leds,   velocidad_ms, fdpuerto, remoto);

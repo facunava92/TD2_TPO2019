@@ -6,7 +6,8 @@
 #include "../headers/rs232.h"
 
 int explosion(int pines[8], int periodo, int fdpuerto, bool remoto){
-	int posC, filas, columnas;
+	char programa[]="La explosion";
+	int speed;
 
 	static const uint8_t lut[16] =	// La LUT se implementa con static y const para permitir optimizaciones
 	{
@@ -44,21 +45,15 @@ int explosion(int pines[8], int periodo, int fdpuerto, bool remoto){
 			int puertochar;
 			if(remoto) rs232escribo(fdpuerto);
 			puertochar = rs232rx(fdpuerto);
+			speed = 101 - (0.9900 * periodo);
 			periodo = controlVelocidad(periodo, puertochar);
-			if(deteccionTecla('q', 0) || puertochar=='q'){
-				ungetch('q');
+			if(deteccionTecla('Q', 0) || puertochar=='Q'){
+				ungetch('Q');
 			       	i=16; break;
 			}
- 			getmaxyx(stdscr, filas, columnas); // Guardo en mis variables las filas 
-			wclear(stdscr);
- 			mvprintw(0	, 0	, "Presione la tecla \"q\" para finalizar", filas, columnas);
- 			mvprintw(filas-1, 0	, "[DEBUG] La terminal tiene %d filas y %d columnas", filas, columnas);
-			(columnas/2-16)<0 ? (posC=0) : (posC = columnas/2-16);
-			mvaddstr(filas/2-1, posC, "Ejecutando la secuencia \"La explosion\"");
-			(columnas/2-14)<0 ? (posC=0) : (posC = columnas/2-14);
-			mvprintw(filas/2, posC, "El periodo actual es %4d ms", periodo);
-			wrefresh(stdscr);
-
+			
+			ledmenu(remoto, programa, speed);
+			
 			delay(1);
 		}
 	}	

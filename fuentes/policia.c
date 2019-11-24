@@ -6,7 +6,8 @@
 #include "../headers/rs232.h"
 
 int policia(int pines[8],int periodo, int fdpuerto, bool remoto ){
-	int posC, filas, columnas;
+char programa [] = "El auto policia";
+int speed;
 
 	static const uint8_t lut[2] =	// La LUT se implementa con static y const para permitir optimizaciones
 	{
@@ -31,19 +32,13 @@ int policia(int pines[8],int periodo, int fdpuerto, bool remoto ){
 			if(remoto) rs232escribo(fdpuerto);
 			puertochar = rs232rx(fdpuerto);
 			periodo = controlVelocidad(periodo, puertochar);
-			if(deteccionTecla('q', 0) || puertochar=='q'){
-				ungetch('q');
+			speed = 101 - (0.9900 * periodo);
+			if(deteccionTecla('Q', 0) || puertochar=='Q'){
+				ungetch('Q');
 			       	i=2; break;
 			}
- 			getmaxyx(stdscr, filas, columnas); // Guardo en mis variables las filas 
-			wclear(stdscr);
- 			mvprintw(0	, 0	, "Presione la tecla \"q\" para finalizar", filas, columnas);
- 			mvprintw(filas-1, 0	, "[DEBUG] La terminal tiene %d filas y %d columnas", filas, columnas);
-			(columnas/2-22)<0 ? (posC=0) : (posC = columnas/2-22);
-			mvaddstr(filas/2-1, posC, "Ejecutando la secuencia \"El auto policía\"");
-			(columnas/2-14)<0 ? (posC=0) : (posC = columnas/2-14);
-			mvprintw(filas/2, posC, "El periodo actual es %4d ms", periodo);
-			wrefresh(stdscr);
+
+			ledmenu(remoto, programa, speed);
 
 			delay(1);
 		}

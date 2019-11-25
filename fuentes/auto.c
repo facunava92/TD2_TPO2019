@@ -6,8 +6,8 @@
 
 int autoFantastico(int leds[8], int periodo, int fdpuerto, bool remoto){
 	bool valores[8] = {0,0,0,0,0,0,0,0}; // Cadena que guarda estados de los leds
-	int posC, filas, columnas,speed;
 	char programa[] = "El auto fantastico";
+	int speed;
 
 	for(int j=0; j<2; j++){	// Realizo dos ciclos, uno de izq. a derecha, otro de derecha a izq.
 		for(int i=0; i<8; i++){ // Prendo todos los leds uno a la vez, en orden

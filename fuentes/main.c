@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <wiringPi.h>
 #include <string.h>
-#include <math.h>
 #include "../headers/deteccionTecla.h"
 #include "../headers/rs232.h"
 #include "../headers/auto.h"

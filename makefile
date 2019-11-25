@@ -22,3 +22,4 @@ ejecutable: $(OBJ)
 .PHONY: clean
 
 clean:
+	rm -r build/*.o ejecutable

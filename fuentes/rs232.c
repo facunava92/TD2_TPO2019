@@ -6,7 +6,7 @@
 #include <wiringSerial.h>
 #include <ncurses.h> // -lncurses
 #include "../headers/deteccionTecla.h"
-#define PUERTO "/dev/serial0"
+#define PUERTO "/dev/AMA0"
 #define VELOCIDAD 9600
 
 int rs232init(char *puerto, int velocidad){
@@ -60,7 +60,7 @@ void rs232escribo(int fd){
 	//read(0, &caracter, 1);
 	//fread(&caracter, sizeof(int), 1, stdin);
 	if(caracter!=ERR){		// Primero me fijo si recibi algun caracter
-		if(caracter == 'r') ungetch('r');
+		if(caracter == 'R') ungetch('R');
 //		else if(caracter=='\033'){ 
 //			read(0,&caracter,1);
 //			read(0,&caracter,1);

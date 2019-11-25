@@ -1,0 +1,13 @@
+\babel@toc {spanish}{}
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{2}{section.1}% 
+\contentsline {section}{\numberline {2}Objetivos}{2}{section.2}% 
+\contentsline {section}{\numberline {3}Diagrama de flujo}{3}{section.3}% 
+\contentsline {section}{\numberline {4}$main.c$}{4}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Inicializaci\IeC {\'o}n de GPIO.}{4}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}nCurses inicializaci\IeC {\'o}n}{4}{subsection.4.2}% 
+\contentsline {subsection}{\numberline {4.3}Inicializaci\IeC {\'o}n de ADC y captura de datos.}{4}{subsection.4.3}% 
+\contentsline {subsection}{\numberline {4.4}Logueo.}{5}{subsection.4.4}% 
+\contentsline {subsection}{\numberline {4.5}Detecci\IeC {\'o}n de tecla}{6}{subsection.4.5}% 
+\contentsline {subsection}{\numberline {4.6}Modo local y remoto}{6}{subsection.4.6}% 
+\contentsline {subsection}{\numberline {4.7}Secuencia}{8}{subsection.4.7}% 
+\contentsline {section}{\numberline {5}Conclusi\IeC {\'o}n}{9}{section.5}% 
